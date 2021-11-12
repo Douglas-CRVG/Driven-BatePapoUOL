@@ -29,6 +29,45 @@ header ion-icon{
     height: 45px;
 }
 
+main{
+    margin-top: 106px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+strong{
+    font-weight: 700;
+}
+
+span{
+    color: #aaaaaa;
+}
+
+.message,
+.private,
+.status{
+    padding: 14px 8px;
+}
+
+.message p,
+.private p,
+.status p{
+    font-size: 14px;
+}
+
+.message{
+    background-color: #FFFFFF;
+}
+
+.private{
+    background-color: #FFDEDE;
+}
+
+.status{
+    background-color: #DCDCDC;
+}
+
 footer{
     width: 100%;
     height: 80px;
@@ -67,9 +106,4 @@ footer ion-icon{
     position: absolute;
     bottom: 10px;
     left: 22;
-}
-
-.espaco{
-    width: 40px;
-    height: 300px;
 }
