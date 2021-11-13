@@ -2,9 +2,16 @@ const URL_API = "https://mock-api.driven.com.br/api/v4/uol";
 //participants
 //status
 //messages
-setInterval(fetchMessages, 3000)
+let user = {};
+
+
+setInterval(() => {
+    axios.post(URL_API + "/status", user);
+}, 5000);
+
 function fetchMessages(){
-    axios.get(URL_API + "/messages").then(renderMessages)
+    axios.get(URL_API + "/messages").then(renderMessages);
+    setInterval(fetchMessages, 3000);
 }
 
 function renderMessages(response){
@@ -28,7 +35,7 @@ function renderMessages(response){
                 </p>
             </div>
             `;
-        } else if(type === "private_message"){
+        } else if(type === "private_message" && (from === user.name || to === user.name)){
             containerMessages.innerHTML +=`
             <div class="private" data-identifier="message">
                 <p>
@@ -48,4 +55,18 @@ function renderMessages(response){
     });
 }
 
-fetchMessages()
+function enterRoom(){
+    user = { name: prompt ("Digite o nome de usuário:") };
+    if (user.name === "" ){
+        alert("Insira um nome válido!");
+        enterRoom();
+    }
+    const promise = axios.post(URL_API + "/participants", user);
+    promise.then(fetchMessages);
+    promise.catch((props) => {
+        alert("Nome de usuário já está sendo utilizado. Por favor, insira outro nome");
+        enterRoom();
+    });
+}
+
+enterRoom();
