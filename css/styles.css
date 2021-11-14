@@ -18,6 +18,7 @@ header{
     top: 0;
     left: 0;
     z-index: 1;
+
 }
 
 header img{
@@ -30,11 +31,15 @@ header ion-icon{
 }
 
 main{
-    margin-top: 106px;
-    margin-bottom: 84px;
+    width: 100%;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    bottom: 84px;
     display: flex;
     flex-direction: column;
     gap: 4px;
+    overflow-y: scroll;
 }
 
 strong{
@@ -55,6 +60,7 @@ span{
 .private p,
 .status p{
     font-size: 14px;
+    border-radius: 2px;
 }
 
 .message{
