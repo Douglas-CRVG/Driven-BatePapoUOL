@@ -33,6 +33,14 @@ function enterRoom() {
     }, 1000);
 }
 
+const inputScreenEnter = document.querySelector("section input");
+inputScreenEnter.addEventListener('keyup', function (e) {
+    const key = (e.which || e.keyCode);
+    if (key == 13) {
+        enterRoom();
+    }
+});
+
 function fetchMessages() {
     axios.get(URL_API + "/messages").then(renderMessages);
 }
@@ -97,7 +105,7 @@ function sendMessage() {
         to: "Todos",
         type: "message"
     };
-    const text = document.querySelector("input");
+    const text = document.querySelector("footer input");
     message.text = text.value;
     text.value = "";
     if (message.text !== "") {
@@ -111,3 +119,11 @@ function sendMessage() {
         });
     }
 }
+
+const inputSendMessageEnter = document.querySelector("footer input");
+inputSendMessageEnter.addEventListener('keyup', function (e) {
+    const key = (e.which || e.keyCode);
+    if (key == 13) {
+        sendMessage();
+    }
+});
