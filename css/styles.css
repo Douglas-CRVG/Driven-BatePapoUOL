@@ -54,6 +54,7 @@ span{
 .private,
 .status{
     padding: 14px 8px;
+    word-break: break-all;
 }
 
 .message p,

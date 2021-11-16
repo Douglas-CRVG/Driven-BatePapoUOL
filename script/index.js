@@ -2,15 +2,28 @@ const URL_API = "https://mock-api.driven.com.br/api/v4/uol";
 //participants
 //status
 //messages
+
 let user = {};
+
+
 let lastMessage;
 let penultimateMessage;
 
-setInterval(fetchMessages, 3000);
+enterRoom();
 
-setInterval(() => {
-    axios.post(URL_API + "/status", user);
-}, 5000);
+function enterRoom() {
+    user = { name: prompt("Digite o nome de usuário:") };
+    if (user.name === "") {
+        alert("Insira um nome válido!");
+        enterRoom();
+    }
+    const promise = axios.post(URL_API + "/participants", user);
+    promise.then(fetchMessages);
+    promise.catch((props) => {
+        alert("Nome de usuário já está sendo utilizado. Por favor, insira outro nome");
+        enterRoom();
+    });
+}
 
 function fetchMessages() {
     axios.get(URL_API + "/messages").then(renderMessages);
@@ -57,23 +70,28 @@ function renderMessages(response) {
         }
     });
     lastMessage = document.querySelector("main div:last-child");
-    if (lastMessage.innerHTML !== penultimateMessage.innerHTML){
+    if (lastMessage !== penultimateMessage){
         lastMessage.scrollIntoView();
     }
 }
 
-function enterRoom() {
-    user = { name: prompt("Digite o nome de usuário:") };
-    if (user.name === "") {
-        alert("Insira um nome válido!");
-        enterRoom();
-    }
-    const promise = axios.post(URL_API + "/participants", user);
-    promise.then(fetchMessages);
-    promise.catch((props) => {
-        alert("Nome de usuário já está sendo utilizado. Por favor, insira outro nome");
-        enterRoom();
-    });
-}
+setInterval(fetchMessages, 3000);
 
-enterRoom();
+setInterval(() => {
+    axios.post(URL_API + "/status", user);
+}, 5000);
+
+let message ={
+    from: user.name,
+    to: "Todos",
+    type: "message"
+};
+
+function sendMessage(){
+    const text = document.querySelector("input");
+    message.text = text.value;
+    text.value = "";
+    const promise = axios.post(URL_API + "/messages", message);
+    promise.then(fetchMessages);
+    promise.catch(() => window.location.reload());
+}
