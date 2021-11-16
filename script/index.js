@@ -1,28 +1,36 @@
 const URL_API = "https://mock-api.driven.com.br/api/v4/uol";
 //participants
-//status
-//messages
-
 let user = {};
-
-
 let lastMessage;
 let penultimateMessage;
 
-enterRoom();
-
 function enterRoom() {
-    user = { name: prompt("Digite o nome de usuário:") };
-    if (user.name === "") {
-        alert("Insira um nome válido!");
-        enterRoom();
-    }
-    const promise = axios.post(URL_API + "/participants", user);
-    promise.then(fetchMessages);
-    promise.catch((props) => {
-        alert("Nome de usuário já está sendo utilizado. Por favor, insira outro nome");
-        enterRoom();
-    });
+    const section = document.querySelector("section");
+    const gif = document.querySelector("section div");
+    user = { name: document.querySelector("section input").value };
+    gif.innerHTML = "";
+    gif.innerHTML = `<img src="assets/loading.gif" alt="Loading...">
+    <p>Entrando...</p>`
+
+    setTimeout(() => {
+        if (user.name === "") {
+            alert("Insira um nome válido!");
+            window.location.reload();
+        }
+        const promise = axios.post(URL_API + "/participants", user);
+        promise.then((props) => {
+            fetchMessages(props);
+            section.classList.add("hidden");
+        });
+        promise.catch((props) => {
+            if (props.response.status === 400) {
+                alert("Nome de usuário já está sendo utilizado. Por favor, insira outro nome");
+                window.location.reload();
+            } else {
+                alert("Erro no sistema!");
+            }
+        });
+    }, 1000);
 }
 
 function fetchMessages() {
@@ -70,7 +78,7 @@ function renderMessages(response) {
         }
     });
     lastMessage = document.querySelector("main div:last-child");
-    if (lastMessage !== penultimateMessage){
+    if (lastMessage !== penultimateMessage) {
         lastMessage.scrollIntoView();
     }
 }
@@ -78,20 +86,28 @@ function renderMessages(response) {
 setInterval(fetchMessages, 3000);
 
 setInterval(() => {
-    axios.post(URL_API + "/status", user);
+    if (user.name !== undefined) {
+        axios.post(URL_API + "/status", user);
+    }
 }, 5000);
 
-let message ={
-    from: user.name,
-    to: "Todos",
-    type: "message"
-};
-
-function sendMessage(){
+function sendMessage() {
+    const message = {
+        from: user.name,
+        to: "Todos",
+        type: "message"
+    };
     const text = document.querySelector("input");
     message.text = text.value;
     text.value = "";
-    const promise = axios.post(URL_API + "/messages", message);
-    promise.then(fetchMessages);
-    promise.catch(() => window.location.reload());
+    if (message.text !== "") {
+        const promise = axios.post(URL_API + "/messages", message);
+        promise.then(fetchMessages);
+        promise.catch((props) => {
+            console.log(message)
+            console.log(props.response)
+            console.log(user.name)
+            window.location.reload();
+        });
+    }
 }

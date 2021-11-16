@@ -5,6 +5,67 @@ body{
     font-family: 'Roboto', sans-serif;
 }
 
+section{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+section img{
+    width: 130px;
+    margin-top: 72px;
+    margin-bottom: 94px;
+}
+
+section>div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+section>div img{
+    width: 130px;
+    margin: 0;
+}
+
+section input{
+    width: 261px;
+    height: 54px;
+    margin-bottom: 15px;
+    border: 1px solid #aeaeae;
+    border-radius: 4px;
+    outline: none;
+    text-align: center;
+    font-size: 18px;
+    color: #aeaeae;
+}
+
+section input::placeholder{
+    color: #aeaeae;    
+}
+
+section button{
+    width: 109px;
+    height: 45px;
+    border: none;
+    border-radius: 9px;
+    background-color: #e7e7e7;
+    font-size: 18px;
+    text-align: center;
+    color: #696969;
+}
+
+.hidden{
+    display: none;
+}
+
 header{
     width: 100%;
     height: 80px;
@@ -90,14 +151,14 @@ footer{
     z-index: 1;
 }
 
-input{
+footer input{
     border: none;
     width: 100%;
     outline: none;
     font-size: 18px;
 }
 
-input::placeholder{
+footer input::placeholder{
     font-style: italic;
     font-size: 18px;
 }
