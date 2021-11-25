@@ -40,11 +40,11 @@ function enterRoom() {
             fetchMessages();
             section.classList.add("hidden");
         });
-        promise.catch(error);
+        promise.catch(whileError);
     }, 1000);
 }
 
-function error(props){
+function whileError(props){
     if (props.response.status === 400) {
         alert("Nome de usuário já está sendo utilizado. Por favor, insira outro nome");
         window.location.reload();
