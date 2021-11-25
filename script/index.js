@@ -1,5 +1,22 @@
 const URL_API = "https://mock-api.driven.com.br/api/v4/uol";
 //participants
+
+const inputScreenEnter = document.querySelector("section input");
+inputScreenEnter.addEventListener('keyup', (e)=>{
+    const key = (e.which || e.keyCode);
+    if (key == 13) {
+        enterRoom();
+    }
+});
+
+const inputSendMessageEnter = document.querySelector("footer input");
+inputSendMessageEnter.addEventListener('keyup', (e)=>{
+    const key = (e.which || e.keyCode);
+    if (key == 13) {
+        sendMessage();
+    }
+});
+
 let user = {};
 let lastMessage;
 let penultimateMessage;
@@ -8,9 +25,10 @@ function enterRoom() {
     const section = document.querySelector("section");
     const gif = document.querySelector("section div");
     user = { name: document.querySelector("section input").value };
-    gif.innerHTML = "";
-    gif.innerHTML = `<img src="assets/loading.gif" alt="Loading...">
-    <p>Entrando...</p>`
+    gif.innerHTML = `
+    <img src="assets/loading.gif" alt="Loading...">
+    <p>Entrando...</p>
+    `;
 
     setTimeout(() => {
         if (user.name === "") {
@@ -18,28 +36,22 @@ function enterRoom() {
             window.location.reload();
         }
         const promise = axios.post(URL_API + "/participants", user);
-        promise.then((props) => {
-            fetchMessages(props);
+        promise.then(()=> {
+            fetchMessages();
             section.classList.add("hidden");
         });
-        promise.catch((props) => {
-            if (props.response.status === 400) {
-                alert("Nome de usuário já está sendo utilizado. Por favor, insira outro nome");
-                window.location.reload();
-            } else {
-                alert("Erro no sistema!");
-            }
-        });
+        promise.catch(error);
     }, 1000);
 }
 
-const inputScreenEnter = document.querySelector("section input");
-inputScreenEnter.addEventListener('keyup', function (e) {
-    const key = (e.which || e.keyCode);
-    if (key == 13) {
-        enterRoom();
+function error(props){
+    if (props.response.status === 400) {
+        alert("Nome de usuário já está sendo utilizado. Por favor, insira outro nome");
+        window.location.reload();
+    } else {
+        alert("Erro no sistema!");
     }
-});
+}
 
 function fetchMessages() {
     axios.get(URL_API + "/messages").then(renderMessages);
@@ -47,7 +59,6 @@ function fetchMessages() {
 
 function renderMessages(response) {
     const props = response.data;
-    penultimateMessage = lastMessage;
     const containerMessages = document.querySelector("main");
     containerMessages.innerHTML = "";
     props.map(prop => {
@@ -85,8 +96,9 @@ function renderMessages(response) {
             `;
         }
     });
+    penultimateMessage = lastMessage;
     lastMessage = document.querySelector("main div:last-child");
-    if (lastMessage !== penultimateMessage) {
+    if (lastMessage.innerHTML !== penultimateMessage.innerHTML) {
         lastMessage.scrollIntoView();
     }
 }
@@ -111,19 +123,8 @@ function sendMessage() {
     if (message.text !== "") {
         const promise = axios.post(URL_API + "/messages", message);
         promise.then(fetchMessages);
-        promise.catch((props) => {
-            console.log(message)
-            console.log(props.response)
-            console.log(user.name)
+        promise.catch(() => {
             window.location.reload();
         });
     }
 }
-
-const inputSendMessageEnter = document.querySelector("footer input");
-inputSendMessageEnter.addEventListener('keyup', function (e) {
-    const key = (e.which || e.keyCode);
-    if (key == 13) {
-        sendMessage();
-    }
-});
